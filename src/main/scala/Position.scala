@@ -7,7 +7,7 @@ case class Position(row: Long, col: Long) {
   private val COL_LEFT = col - 1
   private val COL_RIGHT = col + 1
 
-  def neighboursOf: Seq[Position] = Seq(
+  def neighbouringPositions: Seq[Position] = Seq(
     Position(ROW_ABOVE, COL_LEFT),
     Position(ROW_ABOVE, col),
     Position(ROW_ABOVE, COL_RIGHT),

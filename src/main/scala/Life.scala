@@ -13,7 +13,7 @@ private def toString(positions: Iterable[Position]): String =
 
 def tick(oldGeneration: Set[Position]): Set[Position] =
   oldGeneration
-    .flatMap(p => p +: p.neighboursOf)
+    .flatMap(p => p +: p.neighbouringPositions)
     .filter(p => liveNeighbourCount(p, oldGeneration) match
       case 2 => oldGeneration contains p
       case 3 => true
@@ -21,4 +21,4 @@ def tick(oldGeneration: Set[Position]): Set[Position] =
     )
 
 private def liveNeighbourCount(position: Position, generation: Set[Position]) =
-  position.neighboursOf.count(generation.contains)
+  position.neighbouringPositions.count(generation.contains)
