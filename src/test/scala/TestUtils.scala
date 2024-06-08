@@ -1,5 +1,3 @@
-import scala.collection.mutable
-
 object TestUtils {
 
   def fromMatrix(matrix: String): Set[Position] =

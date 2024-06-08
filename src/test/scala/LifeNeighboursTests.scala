@@ -1,4 +1,3 @@
-import TestUtils.fromMatrix
 import org.scalatest.flatspec.AnyFlatSpec
 
 class LifeNeighboursTests extends AnyFlatSpec {
