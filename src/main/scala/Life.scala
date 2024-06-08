@@ -13,24 +13,12 @@ private def toString(positions: Iterable[Position]): String =
 
 def tick(oldGeneration: Set[Position]): Set[Position] =
   oldGeneration
-    .flatMap(p => p +: neighboursOf(p))
+    .flatMap(p => p +: p.neighboursOf)
     .filter(p => liveNeighbourCount(p, oldGeneration) match
       case 2 => oldGeneration contains p
       case 3 => true
       case _ => false
     )
 
-private def neighboursOf(position: Position): Seq[Position] = List(
-  Position(position.row - 1, position.col - 1),
-  Position(position.row - 1, position.col),
-  Position(position.row - 1, position.col + 1),
-  Position(position.row, position.col - 1),
-  Position(position.row, position.col + 1),
-  Position(position.row + 1, position.col - 1),
-  Position(position.row + 1, position.col),
-  Position(position.row + 1, position.col + 1),
-)
-
 private def liveNeighbourCount(position: Position, generation: Set[Position]) =
-  neighboursOf(position)
-    .count(generation.contains)
+  position.neighboursOf.count(generation.contains)
