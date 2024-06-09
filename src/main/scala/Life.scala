@@ -14,11 +14,31 @@ private def toString(positions: Iterable[Position]): String =
 def tick(oldGeneration: Set[Position]): Set[Position] =
   oldGeneration
     .flatMap(p => p +: p.neighbouringPositions)
-    .filter(p => liveNeighbourCount(p, oldGeneration) match
-      case 2 => oldGeneration contains p
-      case 3 => true
-      case _ => false
-    )
+    .filter(p => isToLive(p, oldGeneration))
+
+private def isToLive(p: Position, oldGeneration: Set[Position]): Boolean = {
+  val neighbourCount = liveNeighbourCount(p, oldGeneration)
+  val wasAlive = oldGeneration contains p
+  isToLive(wasAlive, neighbourCount)
+}
 
 private def liveNeighbourCount(position: Position, generation: Set[Position]) =
   position.neighbouringPositions.count(generation.contains)
+
+private def isToLive(wasItselfAlive: Boolean, numberOfLiveNeighbours: Int): Boolean =
+  /*
+   * Game rules
+   * 1. Any live cell with fewer than two live neighbors dies, as if by underpopulation.
+   * 2. Any live cell with two or three live neighbors lives on to the next generation.
+   * 3. Any live cell with more than three live neighbors dies, as if by overpopulation.
+   * 4. Any dead cell with exactly three live neighbors becomes a live cell, as if by reproduction.
+   *
+   * These rules can be logically transposed to:
+   * A. Any cell with exactly three live neighbours (live or dead) is alive in next generation.
+   * B. Any cell with two live neighbours retains their state in next generation.
+   * C. All other cells are dead in next generation.
+   */
+  numberOfLiveNeighbours match
+    case 3 => true
+    case 2 => wasItselfAlive
+    case _ => false
