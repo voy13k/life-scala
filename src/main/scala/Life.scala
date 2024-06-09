@@ -6,10 +6,7 @@
     .toSet
   for i <- 1 to 100 do
     generation = tick(generation)
-    printf("%d: %s\n", i, toString(generation))
-
-private def toString(positions: Iterable[Position]): String =
-  "[" + positions.mkString(", ") + "]"
+    printf("%d: [%s]\n", i, generation.mkString(", "))
 
 def tick(oldGeneration: Set[Position]): Set[Position] =
   oldGeneration
