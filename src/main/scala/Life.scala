@@ -39,3 +39,22 @@ private def isToLive(wasItselfAlive: Boolean, numberOfLiveNeighbours: Int): Bool
     case 3 => true
     case 2 => wasItselfAlive
     case _ => false
+
+extension (p: Position)
+  def neighbouringPositions: Seq[Position] =
+    val ROW_ABOVE = p.row - 1
+    val ROW_BELOW = p.row + 1
+    val COL_LEFT = p.col - 1
+    val COL_RIGHT = p.col + 1
+    Seq(
+      Position(ROW_ABOVE, COL_LEFT),
+      Position(ROW_ABOVE, p.col),
+      Position(ROW_ABOVE, COL_RIGHT),
+
+      Position(p.row, COL_LEFT),
+      Position(p.row, COL_RIGHT),
+
+      Position(ROW_BELOW, COL_LEFT),
+      Position(ROW_BELOW, p.col),
+      Position(ROW_BELOW, COL_RIGHT),
+    )
