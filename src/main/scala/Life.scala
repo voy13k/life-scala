@@ -1,20 +1,10 @@
-@main def run(args: String*): Unit =
-  val jsonString = if args.isEmpty then "[]" else args.mkString(" ")
-  val life = parseJsonSeed(jsonString)
-  life.evolve(100)
-
-def parseJsonSeed(seedString: String): Life =
-  val fromArgs: List[List[Int]] = upickle.default.read[List[List[Int]]](seedString)
-  val seed = fromArgs.map(coords => Position(coords(0), coords(1)))
-  Life(seed)
-
 class Life(seed: Iterable[Position]):
   private var liveCells: Set[Position] = seed.toSet
 
-  def evolve(maxCycles: Int): Set[Position] =
+  def evolve(maxCycles: Int, onCycle: (Long, Set[Position]) => Unit = (c, g) => {}): Set[Position] =
     for cycle <- 1 to maxCycles do
       liveCells = Life.evolve(liveCells)
-      printf("%d: [%s]\n", cycle, liveCells.mkString(", "))
+      onCycle(cycle, liveCells)
 
     liveCells
 
