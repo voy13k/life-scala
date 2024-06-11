@@ -1,60 +1,80 @@
 @main def run(args: String*): Unit =
-  val seed = if args.isEmpty then "[]" else args.mkString(" ")
-  val fromArgs: List[List[Int]] = upickle.default.read[List[List[Int]]](seed)
-  var generation = fromArgs
-    .map(coords => Position(coords(0), coords(1)))
-    .toSet
-  for i <- 1 to 100 do
-    generation = tick(generation)
-    printf("%d: [%s]\n", i, generation.mkString(", "))
+  val jsonString = if args.isEmpty then "[]" else args.mkString(" ")
+  val life = parseJsonSeed(jsonString)
+  life.evolve(100)
 
-def tick(oldGeneration: Set[Position]): Set[Position] =
-  oldGeneration
-    .flatMap(p => p +: p.neighbouringPositions)
-    .filter(p => isToLive(p, oldGeneration))
+def parseJsonSeed(seedString: String): Life =
+  val fromArgs: List[List[Int]] = upickle.default.read[List[List[Int]]](seedString)
+  val seed = fromArgs.map(coords => Position(coords(0), coords(1)))
+  Life(seed)
 
-private def isToLive(p: Position, oldGeneration: Set[Position]): Boolean = {
-  val neighbourCount = liveNeighbourCount(p, oldGeneration)
-  val wasAlive = oldGeneration contains p
-  isToLive(wasAlive, neighbourCount)
-}
+class Life(seed: Iterable[Position]):
+  private var liveCells: Set[Position] = seed.toSet
 
-private def liveNeighbourCount(position: Position, generation: Set[Position]) =
-  position.neighbouringPositions.count(generation.contains)
+  def evolve(maxCycles: Int): Set[Position] =
+    for cycle <- 1 to maxCycles do
+      liveCells = Life.evolve(liveCells)
+      printf("%d: [%s]\n", cycle, liveCells.mkString(", "))
 
-private def isToLive(wasItselfAlive: Boolean, numberOfLiveNeighbours: Int): Boolean =
-  /*
-   * Game rules
+    liveCells
+
+object Life:
+
+  /**
+   * Calculate the life status in a new generation of a potential cell,
+   * based on that cell's situation in previous generation,
+   * according to the Game Rules:
    * 1. Any live cell with fewer than two live neighbors dies, as if by underpopulation.
    * 2. Any live cell with two or three live neighbors lives on to the next generation.
    * 3. Any live cell with more than three live neighbors dies, as if by overpopulation.
    * 4. Any dead cell with exactly three live neighbors becomes a live cell, as if by reproduction.
    *
-   * These rules can be logically transposed to:
-   * A. Any cell with exactly three live neighbours (live or dead) is alive in next generation.
-   * B. Any cell with two live neighbours retains their state in next generation.
-   * C. All other cells are dead in next generation.
+   * @param wasCellAlive           was the cell alive in the last generation
+   * @param numberOfLiveNeighbours how many live neighbours has the cell had in the last generation
+   * @return true when the cell is to live, false otherwise
    */
-  numberOfLiveNeighbours match
-    case 3 => true
-    case 2 => wasItselfAlive
-    case _ => false
+  def shouldLiveRules(wasCellAlive: Boolean, numberOfLiveNeighbours: Int): Boolean =
+    /*
+     * The rules above can be logically transposed to:
+     * A. Any cell with exactly 3 live neighbours (live or dead) is alive in next generation.
+     * B. Any cell with 2 live neighbours retains their state in next generation (dead / alive).
+     * C. In any other case a cell is dead in next generation.
+     */
+    numberOfLiveNeighbours match
+      case 3 => true
+      case 2 => wasCellAlive
+      case _ => false
 
-extension (p: Position)
-  def neighbouringPositions: Seq[Position] =
-    val ROW_ABOVE = p.row - 1
-    val ROW_BELOW = p.row + 1
-    val COL_LEFT = p.col - 1
-    val COL_RIGHT = p.col + 1
-    Seq(
-      Position(ROW_ABOVE, COL_LEFT),
-      Position(ROW_ABOVE, p.col),
-      Position(ROW_ABOVE, COL_RIGHT),
+  private def evolve(oldGeneration: Set[Position]): Set[Position] =
+    oldGeneration
+      .flatMap(_.neighbouringPositions)
+      .filter(_.shouldLive(oldGeneration))
 
-      Position(p.row, COL_LEFT),
-      Position(p.row, COL_RIGHT),
+  extension (p: Position)
 
-      Position(ROW_BELOW, COL_LEFT),
-      Position(ROW_BELOW, p.col),
-      Position(ROW_BELOW, COL_RIGHT),
-    )
+    def neighbouringPositions: Seq[Position] =
+      val ROW_ABOVE = p.row - 1
+      val ROW_BELOW = p.row + 1
+      val COL_LEFT = p.col - 1
+      val COL_RIGHT = p.col + 1
+      Seq(
+        Position(ROW_ABOVE, COL_LEFT),
+        Position(ROW_ABOVE, p.col),
+        Position(ROW_ABOVE, COL_RIGHT),
+
+        Position(p.row, COL_LEFT),
+        Position(p.row, COL_RIGHT),
+
+        Position(ROW_BELOW, COL_LEFT),
+        Position(ROW_BELOW, p.col),
+        Position(ROW_BELOW, COL_RIGHT),
+      )
+
+    private def shouldLive(otherLiveCells: Set[Position]): Boolean = {
+      val wasAlive = otherLiveCells contains p
+      val neighbourCount = p.liveNeighbourCount(otherLiveCells)
+      shouldLiveRules(wasAlive, neighbourCount)
+    }
+
+    private def liveNeighbourCount(generation: Set[Position]): Int =
+      p.neighbouringPositions.count(generation.contains)

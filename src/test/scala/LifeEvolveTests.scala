@@ -1,15 +1,16 @@
 import TestUtils.fromMatrix
 import org.scalatest.flatspec.AnyFlatSpec
 
-class LifeTickTests extends AnyFlatSpec {
+class LifeEvolveTests extends AnyFlatSpec {
 
-  private def assertTick(from: String, to: String) =
+  private def assertEvolve(cycles: Int, from: String, to: String): Any =
+    val life = Life(fromMatrix(from))
     assertResult(fromMatrix(to)) {
-      tick(fromMatrix(from))
+      life.evolve(cycles)
     }
 
   "live cell with 0 neighbours" should "die" in {
-    assertTick(
+    assertEvolve(1,
       """|
          | 0
          |
@@ -21,34 +22,30 @@ class LifeTickTests extends AnyFlatSpec {
   }
 
   "live cell with 1 neighbour" should "die" in {
-    assertTick(
+    assertEvolve(1,
       """|1
          | 1
          |
-      """,
-      """""")
-    assertTick(
+      """, """""")
+    assertEvolve(1,
       """| 1
          | 1
          |
-      """,
-      """""")
-    assertTick(
+      """, """""")
+    assertEvolve(1,
       """|  1
          | 1
          |
-      """,
-      """""")
-    assertTick(
+      """, """""")
+    assertEvolve(1,
       """|
          |11
          |
-      """,
-      """""")
+      """, """""")
   }
 
   "live cell with 2 neighbours" should "stay alive" in {
-    assertTick(
+    assertEvolve(1,
       """|
          | 22
          |  2
@@ -59,7 +56,7 @@ class LifeTickTests extends AnyFlatSpec {
          | XX
          |
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          | X X
          |  2
@@ -70,7 +67,7 @@ class LifeTickTests extends AnyFlatSpec {
          |  X
          |
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          | 2
          | 22
@@ -81,7 +78,7 @@ class LifeTickTests extends AnyFlatSpec {
          | XX
          |
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          | X
          |  2X
@@ -92,7 +89,7 @@ class LifeTickTests extends AnyFlatSpec {
          |  X
          |
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          | X
          |  2
@@ -103,7 +100,7 @@ class LifeTickTests extends AnyFlatSpec {
          | XX
          |
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          | X
          |  2
@@ -114,7 +111,7 @@ class LifeTickTests extends AnyFlatSpec {
          | XX
          |
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          | X
          |  2
@@ -128,7 +125,7 @@ class LifeTickTests extends AnyFlatSpec {
   }
 
   "dead cell with 2 neighbours" should "stay dead" in {
-    assertTick(
+    assertEvolve(1,
       """|nn
          |
          |
@@ -137,7 +134,7 @@ class LifeTickTests extends AnyFlatSpec {
          |
          |
       """)
-    assertTick(
+    assertEvolve(1,
       """|n n
          |
          |
@@ -146,7 +143,7 @@ class LifeTickTests extends AnyFlatSpec {
          |
          |
       """)
-    assertTick(
+    assertEvolve(1,
       """|n
          |n
          |
@@ -155,7 +152,7 @@ class LifeTickTests extends AnyFlatSpec {
          |
          |
       """)
-    assertTick(
+    assertEvolve(1,
       """|n
          |  n
          |
@@ -164,7 +161,7 @@ class LifeTickTests extends AnyFlatSpec {
          |
          |
       """)
-    assertTick(
+    assertEvolve(1,
       """|n
          |
          |n
@@ -173,7 +170,7 @@ class LifeTickTests extends AnyFlatSpec {
          |
          |
       """)
-    assertTick(
+    assertEvolve(1,
       """|n
          |
          | n
@@ -182,7 +179,7 @@ class LifeTickTests extends AnyFlatSpec {
          |
          |
       """)
-    assertTick(
+    assertEvolve(1,
       """|n
          |
          |  n
@@ -194,7 +191,7 @@ class LifeTickTests extends AnyFlatSpec {
   }
 
   "live cell with 3 neighbours" should "stay alive" in {
-    assertTick(
+    assertEvolve(1,
       """|
          |X3X
          | 3
@@ -203,7 +200,7 @@ class LifeTickTests extends AnyFlatSpec {
          |XXX
          |+X+
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          |33
          |33
@@ -212,7 +209,7 @@ class LifeTickTests extends AnyFlatSpec {
          |XX
          |XX
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          |X3
          | 3X
@@ -221,7 +218,7 @@ class LifeTickTests extends AnyFlatSpec {
          |XX+
          |+XX
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          |XX
          | 3
@@ -232,7 +229,7 @@ class LifeTickTests extends AnyFlatSpec {
          | X
          |
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          |XX
          | 3
@@ -243,7 +240,7 @@ class LifeTickTests extends AnyFlatSpec {
          | X+
          |
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          |XX
          | 3
@@ -257,7 +254,7 @@ class LifeTickTests extends AnyFlatSpec {
   }
 
   "dead cell with 3 neighbours" should "become alive" in {
-    assertTick(
+    assertEvolve(1,
       """|
          |nnn
          |
@@ -268,7 +265,7 @@ class LifeTickTests extends AnyFlatSpec {
          | +
          |
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          |nn
          |n
@@ -277,7 +274,7 @@ class LifeTickTests extends AnyFlatSpec {
          |XX
          |XX
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          |nn
          |  n
@@ -286,7 +283,7 @@ class LifeTickTests extends AnyFlatSpec {
          | X
          | X
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          |nn
          |
@@ -296,7 +293,7 @@ class LifeTickTests extends AnyFlatSpec {
          |
          |++
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          |nn
          |
@@ -306,7 +303,7 @@ class LifeTickTests extends AnyFlatSpec {
          |
          |++
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          |nn
          |
@@ -317,7 +314,7 @@ class LifeTickTests extends AnyFlatSpec {
          | +
          |
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          |n n
          |
@@ -328,7 +325,7 @@ class LifeTickTests extends AnyFlatSpec {
          | +
          |
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          |n n
          |
@@ -339,7 +336,7 @@ class LifeTickTests extends AnyFlatSpec {
          | +
          |
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          |n
          |  n
@@ -353,7 +350,7 @@ class LifeTickTests extends AnyFlatSpec {
   }
 
   "cell with 4 neighbours" should "die" in {
-    assertTick(
+    assertEvolve(1,
       """|
          |x4x
          |x4
@@ -362,7 +359,7 @@ class LifeTickTests extends AnyFlatSpec {
          |x x
          |x +
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          |x4x
          | 4x
@@ -371,7 +368,7 @@ class LifeTickTests extends AnyFlatSpec {
          |x x
          |+ x
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          |xxx
          | 4
@@ -382,7 +379,7 @@ class LifeTickTests extends AnyFlatSpec {
          |  +
          |
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          |xxx
          | 4
@@ -392,7 +389,7 @@ class LifeTickTests extends AnyFlatSpec {
          |xxx
          |
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          |xxx
          | 4
@@ -402,7 +399,7 @@ class LifeTickTests extends AnyFlatSpec {
          |xxx
          |+
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          |x x
          | 4
@@ -413,7 +410,7 @@ class LifeTickTests extends AnyFlatSpec {
          |+ +
          | +
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          | x
          |x4x
@@ -427,7 +424,7 @@ class LifeTickTests extends AnyFlatSpec {
   }
 
   "live cell with 5 neighbours" should "die" in {
-    assertTick(
+    assertEvolve(1,
       """|
          |X5X
          |X5X
@@ -438,7 +435,7 @@ class LifeTickTests extends AnyFlatSpec {
          |X X
          | +
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          | XXX
          | X5
@@ -449,7 +446,7 @@ class LifeTickTests extends AnyFlatSpec {
          |+  +
          | X+
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          | XXX
          | X5
@@ -460,7 +457,7 @@ class LifeTickTests extends AnyFlatSpec {
          |
          | +X
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          | XXX
          | X5
@@ -471,7 +468,7 @@ class LifeTickTests extends AnyFlatSpec {
          | X
          |  +
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          | XXX
          |  5
@@ -482,7 +479,7 @@ class LifeTickTests extends AnyFlatSpec {
          |
          |  +
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          | XXX
          |  5
@@ -493,7 +490,7 @@ class LifeTickTests extends AnyFlatSpec {
          |
          | XX
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          |  XX
          | X5
@@ -504,7 +501,7 @@ class LifeTickTests extends AnyFlatSpec {
          |
          | XX
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          | XX
          |  5X
@@ -518,7 +515,7 @@ class LifeTickTests extends AnyFlatSpec {
   }
 
   "live cell with 6 neighbours" should "die" in {
-    assertTick(
+    assertEvolve(1,
       """|
          | XXX
          | X6X
@@ -529,7 +526,7 @@ class LifeTickTests extends AnyFlatSpec {
          |+  X
          | X
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          | XXX
          | X6X
@@ -540,7 +537,7 @@ class LifeTickTests extends AnyFlatSpec {
          |
          | +X+
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          | XXX
          |  6X
@@ -551,7 +548,7 @@ class LifeTickTests extends AnyFlatSpec {
          |
          | XX+
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          |  XX
          | X6X
@@ -562,7 +559,7 @@ class LifeTickTests extends AnyFlatSpec {
          |
          | X +
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          | X X
          | X6X
@@ -573,7 +570,7 @@ class LifeTickTests extends AnyFlatSpec {
          |+  X
          | X +
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          | X X
          | X6X
@@ -587,7 +584,7 @@ class LifeTickTests extends AnyFlatSpec {
   }
 
   "live cell with 7 neighbours" should "die" in {
-    assertTick(
+    assertEvolve(1,
       """|
          | XXX
          | X7X
@@ -598,7 +595,7 @@ class LifeTickTests extends AnyFlatSpec {
          |+
          | X +
       """)
-    assertTick(
+    assertEvolve(1,
       """|
          | XXX
          | X7X
@@ -612,7 +609,7 @@ class LifeTickTests extends AnyFlatSpec {
   }
 
   "live cell with 8 neighbours" should "die" in {
-    assertTick(
+    assertEvolve(1,
       """|
          | XXX
          | X7X
@@ -625,5 +622,21 @@ class LifeTickTests extends AnyFlatSpec {
          |  +
       """)
   }
+
+  "2 cycles" should "take us further" in {
+    assertEvolve(2,
+      """|
+         | XXX
+         | X7X
+         | XXX
+      """,
+      """|  +
+         | X+X
+         |X+ +X
+         | X+X
+         |  X
+      """)
+  }
+
 
 }

@@ -1,7 +1,7 @@
 import TestUtils.fromMatrix
 import org.scalatest.flatspec.AnyFlatSpec
 
-class LifeIsToLiveTests extends AnyFlatSpec {
+class LifeShouldLiveRulesTests extends AnyFlatSpec {
 
   private def anyLiveCellWithFewerThanTwoLiveNeighbours(wasAlive: Boolean, liveNeighbourCount: Int): Unit = {
     assert(wasAlive, "not applicable to dead cells")
@@ -9,7 +9,7 @@ class LifeIsToLiveTests extends AnyFlatSpec {
 
     it must "die, as if by underpopulation" in {
       assertResult(false) {
-        isToLive(wasAlive, liveNeighbourCount)
+        Life.shouldLiveRules(wasAlive, liveNeighbourCount)
       }
     }
   }
@@ -20,7 +20,7 @@ class LifeIsToLiveTests extends AnyFlatSpec {
 
     it must "live on to the next generation" in {
       assertResult(true) {
-        isToLive(wasAlive, liveNeighbourCount)
+        Life.shouldLiveRules(wasAlive, liveNeighbourCount)
       }
     }
   }
@@ -31,7 +31,7 @@ class LifeIsToLiveTests extends AnyFlatSpec {
 
     it must "die, as if by overpopulation." in {
       assertResult(false) {
-        isToLive(wasAlive, liveNeighbourCount)
+        Life.shouldLiveRules(wasAlive, liveNeighbourCount)
       }
     }
   }
@@ -42,7 +42,7 @@ class LifeIsToLiveTests extends AnyFlatSpec {
 
     it must "become a live cell, as if by reproduction" in {
       assertResult(true) {
-        isToLive(wasAlive, liveNeighbourCount)
+        Life.shouldLiveRules(wasAlive, liveNeighbourCount)
       }
     }
   }
@@ -53,7 +53,7 @@ class LifeIsToLiveTests extends AnyFlatSpec {
 
     it must "be dead in new generation" in {
       assertResult(false) {
-        isToLive(wasAlive, liveNeighbourCount)
+        Life.shouldLiveRules(wasAlive, liveNeighbourCount)
       }
     }
   }
