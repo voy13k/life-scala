@@ -4,8 +4,8 @@ import org.scalatest.flatspec.AnyFlatSpec
 class LifeTickTests extends AnyFlatSpec {
 
   private def assertTick(from: String, to: String) =
-    assertResult(fromMatrix(to.stripMargin)) {
-      tick(fromMatrix(from.stripMargin))
+    assertResult(fromMatrix(to)) {
+      tick(fromMatrix(from))
     }
 
   "live cell with 0 neighbours" should "die" in {

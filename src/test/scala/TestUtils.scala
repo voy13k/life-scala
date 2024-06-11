@@ -2,7 +2,7 @@ object TestUtils {
 
   def fromMatrix(matrix: String): Set[Position] =
     var positions = Set[Position]()
-    val lines = matrix.lines.toList
+    val lines = matrix.stripMargin.lines.toList
     for row <- 0 until lines.size do
       val line = lines.get(row)
       for
