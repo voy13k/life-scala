@@ -60,11 +60,8 @@ object Life:
         Position(ROW_BELOW, COL_RIGHT),
       )
 
-    private def shouldLive(otherLiveCells: Set[Position]): Boolean = {
-      val wasAlive = otherLiveCells contains p
-      val neighbourCount = p.liveNeighbourCount(otherLiveCells)
-      shouldLiveRules(wasAlive, neighbourCount)
+    private def shouldLive(generation: Set[Position]): Boolean = {
+      val wasAlive = generation contains p
+      val liveNeighbourCount = p.neighbouringPositions.count(generation.contains)
+      shouldLiveRules(wasAlive, liveNeighbourCount)
     }
-
-    private def liveNeighbourCount(generation: Set[Position]): Int =
-      p.neighbouringPositions.count(generation.contains)
