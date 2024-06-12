@@ -21,18 +21,12 @@ object Life:
    *
    * NOTE the rules above don't explicitly stipulate what happens to dead cells with other than 3 neighbours,
    * we will assume they implicitly stay dead.
-   * 
+   *
    * @param wasCellAlive           was the cell alive in the last generation
    * @param numberOfLiveNeighbours how many live neighbours has the cell had in the last generation
    * @return true when the cell is to live, false otherwise
    */
   def shouldLiveRules(wasCellAlive: Boolean, numberOfLiveNeighbours: Int): Boolean =
-    /*
-     * The rules above can be logically transposed to:
-     * A. Any cell with exactly 3 live neighbours (live or dead) is alive in next generation.
-     * B. Any cell with 2 live neighbours retains their state in next generation (dead / alive).
-     * C. In any other case a cell is dead in next generation.
-     */
     numberOfLiveNeighbours match
       case x if wasCellAlive && x < 2 => false
       case 2 | 3 if wasCellAlive => true
