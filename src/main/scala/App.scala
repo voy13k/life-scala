@@ -4,8 +4,8 @@
   life.evolve(100, (c, g) => printLife(c, g))
 
 private def parseJsonSeed(seedString: String) =
-  val fromArgs: List[List[Int]] = upickle.default.read[List[List[Int]]](seedString)
-  val seed = fromArgs.map(coords => Position(coords(0), coords(1)))
+  val fromArgs = upickle.default.read[List[Vector[Int]]](seedString)
+  val seed = fromArgs.map(v => Position(v(0), v(1)))
   printLife(0, seed)
   Life(seed)
 
