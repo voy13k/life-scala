@@ -19,6 +19,9 @@ object Life:
    * 3. Any live cell with more than three live neighbors dies, as if by overpopulation.
    * 4. Any dead cell with exactly three live neighbors becomes a live cell, as if by reproduction.
    *
+   * NOTE the rules above don't explicitly stipulate what happens to dead cells with other than 3 neighbours,
+   * we will assume they implicitly stay dead.
+   * 
    * @param wasCellAlive           was the cell alive in the last generation
    * @param numberOfLiveNeighbours how many live neighbours has the cell had in the last generation
    * @return true when the cell is to live, false otherwise
@@ -31,8 +34,10 @@ object Life:
      * C. In any other case a cell is dead in next generation.
      */
     numberOfLiveNeighbours match
-      case 3 => true
-      case 2 => wasCellAlive
+      case x if wasCellAlive && x < 2 => false
+      case 2 | 3 if wasCellAlive => true
+      case x if wasCellAlive && x > 3 => false
+      case 3 if !wasCellAlive => true
       case _ => false
 
   private def evolve(oldGeneration: Set[Position]): Set[Position] =
