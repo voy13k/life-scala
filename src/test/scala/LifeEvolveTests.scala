@@ -7,6 +7,7 @@ class LifeEvolveTests extends AnyFlatSpec {
     val life = Life(fromMatrix(from))
     assertResult(fromMatrix(to)) {
       life.evolve(cycles)
+      life.liveCells
     }
 
   "live cell with 0 neighbours" should "die" in {

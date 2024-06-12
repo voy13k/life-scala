@@ -1,15 +1,16 @@
 class Life(seed: Iterable[Position]):
-  private var liveCells: Set[Position] = seed.toSet
 
-  def evolve(maxCycles: Int, onCycle: (Long, Set[Position]) => Unit = (c, g) => {}): Set[Position] =
-    for cycle <- 1 to maxCycles do
-      liveCells = Life.evolve(liveCells)
-      onCycle(cycle, liveCells)
+  private var _liveCells = seed.toSet
 
-    liveCells
+  def liveCells: Set[Position] = _liveCells
+
+  def evolve(maxCycles: Int, onCycle: (Long, Iterable[Position]) => Unit = (c, g) => {}): Unit =
+    (1 to maxCycles).foreach(cycle =>
+      _liveCells = Life.evolve(_liveCells)
+      onCycle(cycle, _liveCells)
+    )
 
 object Life:
-
   /**
    * Calculate the life status in a new generation of a potential cell,
    * based on that cell's situation in previous generation,
