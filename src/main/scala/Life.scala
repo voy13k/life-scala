@@ -42,23 +42,24 @@ object Life:
 
   extension (p: Position)
 
-    def neighbouringPositions: Seq[Position] =
-      val ROW_ABOVE = p.row - 1
-      val ROW_BELOW = p.row + 1
-      val COL_LEFT = p.col - 1
-      val COL_RIGHT = p.col + 1
-      Seq(
-        Position(ROW_ABOVE, COL_LEFT),
-        Position(ROW_ABOVE, p.col),
-        Position(ROW_ABOVE, COL_RIGHT),
+    def neighbouringPositions: Seq[Position] = p match
+      case Position(row, col) =>
+        val ROW_ABOVE = row - 1
+        val ROW_BELOW = row + 1
+        val COL_LEFT = col - 1
+        val COL_RIGHT = col + 1
+        Seq(
+          Position(ROW_ABOVE, COL_LEFT),
+          Position(ROW_ABOVE, col),
+          Position(ROW_ABOVE, COL_RIGHT),
 
-        Position(p.row, COL_LEFT),
-        Position(p.row, COL_RIGHT),
+          Position(row, COL_LEFT),
+          Position(row, COL_RIGHT),
 
-        Position(ROW_BELOW, COL_LEFT),
-        Position(ROW_BELOW, p.col),
-        Position(ROW_BELOW, COL_RIGHT),
-      )
+          Position(ROW_BELOW, COL_LEFT),
+          Position(ROW_BELOW, col),
+          Position(ROW_BELOW, COL_RIGHT),
+        )
 
     private def shouldLive(generation: Set[Position]): Boolean = {
       val wasAlive = generation contains p
