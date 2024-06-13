@@ -37,7 +37,7 @@ object Life:
 
   private def evolve(oldGeneration: Set[Position]): Set[Position] =
     oldGeneration
-      .flatMap(_.neighbouringPositions)
+      .flatMap(neighbouringPositions)
       .filter(_.shouldLive(oldGeneration))
 
   extension (p: Position)
@@ -63,6 +63,6 @@ object Life:
 
     private def shouldLive(generation: Set[Position]): Boolean = {
       val wasAlive = generation contains p
-      val liveNeighbourCount = p.neighbouringPositions.count(generation.contains)
+      val liveNeighbourCount = neighbouringPositions.count(generation.contains)
       shouldLiveRules(wasAlive, liveNeighbourCount)
     }
