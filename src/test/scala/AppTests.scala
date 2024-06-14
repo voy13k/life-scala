@@ -2,7 +2,7 @@ import org.scalatest.Inspectors.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.*
 
-import java.io.{ByteArrayOutputStream, PrintStream}
+import java.io.ByteArrayOutputStream
 
 class AppTests extends AnyFlatSpec with Matchers {
 
@@ -18,14 +18,14 @@ class AppTests extends AnyFlatSpec with Matchers {
 
   private def assertLife(seed: String, expected: Set[String]) =
     val capturedStdOut = ByteArrayOutputStream()
-    Console.withOut(PrintStream(capturedStdOut)) {
+    Console.withOut(capturedStdOut) {
       app(seed)
     }
     val appOutput = capturedStdOut.toString.lines.toList.getLast.split("\\s*:")
     val (cycle, livingCells) = (appOutput(0), appOutput(1))
 
     cycle should be("100")
-    forAll(expected) { e => livingCells should include (e) }
+    forAll(expected) { e => livingCells should include(e) }
     livingCells.count(_ == ',') should be(if expected.isEmpty then 0 else expected.size * 2 - 1)
 
 }
