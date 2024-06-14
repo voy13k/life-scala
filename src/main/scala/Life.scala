@@ -1,18 +1,11 @@
 object Life:
 
-  def evolve(seed: Iterable[Position],
-             maxCycles: Int,
-             onCycle: (Long, Iterable[Position]) => Unit = (c, g) => ()
-            ): Set[Position] =
-    var liveCells = seed.toSet
-    (1 to maxCycles).foreach(cycle =>
-      liveCells = liveCells
-        .flatMap(neighbouringPositions)
-        .filter(_.shouldLive(liveCells))
-      onCycle(cycle, liveCells)
-    )
-    liveCells
-  end evolve
+  def apply(seed: Iterable[Position]): LazyList[Set[Position]] =
+    val seedSet = seed.toSet
+    val nextGen = seedSet
+      .flatMap(neighbouringPositions)
+      .filter(_.shouldLive(seedSet))
+    nextGen #:: Life(nextGen)
 
   /**
    * Calculate the life status in a new generation of a potential cell,

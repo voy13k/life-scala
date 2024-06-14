@@ -5,7 +5,7 @@ class LifeEvolveTests extends AnyFlatSpec {
 
   private def assertEvolve(cycles: Int, from: String, to: String): Any =
     assertResult(fromMatrix(to)) {
-      Life.evolve(fromMatrix(from), cycles)
+      Life(fromMatrix(from)).take(cycles).last
     }
 
   "live cell with 0 neighbours" should "die" in {
