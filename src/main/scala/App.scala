@@ -1,17 +1,16 @@
 @main def app(args: String*): Unit =
   val jsonString = if args.isEmpty then "[]" else args.mkString(" ")
-  val life = parseJsonSeed(jsonString)
-  life.evolve(100, (c, g) => printLife(c, g))
-
-private def parseJsonSeed(seedString: String) =
-  val fromArgs = upickle.default.read[List[Vector[Int]]](seedString)
-  val seed = fromArgs.map(v => Position(v(0), v(1)))
+  val seed = parseJsonSeed(jsonString)
   printLife(0, seed)
-  Life(seed)
+  Life.evolve(seed, 100, printLife)
 
-private def printLife(c: Long, g: Iterable[Position]): Unit = {
+private def parseJsonSeed(seedString: String): List[Position] =
+  val fromArgs = upickle.default.read[List[Vector[Int]]](seedString)
+  fromArgs.map(v => Position(v(0), v(1)))
+
+private def printLife(cycle: Long, liveCells: Iterable[Position]): Unit = {
   printf(
     "%d: [%s]\n",
-    c,
-    g.map(c => s"[${c.row}, ${c.col}]").mkString(", "))
+    cycle,
+    liveCells.map(c => s"[${c.row}, ${c.col}]").mkString(", "))
 }

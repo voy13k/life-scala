@@ -4,10 +4,8 @@ import org.scalatest.flatspec.AnyFlatSpec
 class LifeEvolveTests extends AnyFlatSpec {
 
   private def assertEvolve(cycles: Int, from: String, to: String): Any =
-    val life = Life(fromMatrix(from))
     assertResult(fromMatrix(to)) {
-      life.evolve(cycles)
-      life.liveCells
+      Life.evolve(fromMatrix(from), cycles)
     }
 
   "live cell with 0 neighbours" should "die" in {
