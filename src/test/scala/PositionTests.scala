@@ -1,5 +1,4 @@
 import org.scalatest.flatspec.AnyFlatSpec
-import Life.neighbouringPositions
 
 class PositionTests extends AnyFlatSpec {
 

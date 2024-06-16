@@ -3,7 +3,7 @@ object Life:
   def apply(seed: Iterable[Position]): LazyList[Set[Position]] =
     val seedSet = seed.toSet
     val nextGen = seedSet
-      .flatMap(neighbouringPositions)
+      .flatMap(_.neighbouringPositions)
       .filter(_.shouldLive(seedSet))
     nextGen #:: Life(nextGen)
 
@@ -32,28 +32,8 @@ object Life:
       case _ => false
 
   extension (p: Position)
-
-    def neighbouringPositions: Seq[Position] = p match
-      case Position(row, col) =>
-        val ROW_ABOVE = row - 1
-        val ROW_BELOW = row + 1
-        val COL_LEFT = col - 1
-        val COL_RIGHT = col + 1
-        Seq(
-          Position(ROW_ABOVE, COL_LEFT),
-          Position(ROW_ABOVE, col),
-          Position(ROW_ABOVE, COL_RIGHT),
-
-          Position(row, COL_LEFT),
-          Position(row, COL_RIGHT),
-
-          Position(ROW_BELOW, COL_LEFT),
-          Position(ROW_BELOW, col),
-          Position(ROW_BELOW, COL_RIGHT),
-        )
-
     private def shouldLive(generation: Set[Position]): Boolean = {
       val wasAlive = generation contains p
-      val liveNeighbourCount = neighbouringPositions.count(generation.contains)
+      val liveNeighbourCount = p.neighbouringPositions.count(generation.contains)
       shouldLiveRules(wasAlive, liveNeighbourCount)
     }
