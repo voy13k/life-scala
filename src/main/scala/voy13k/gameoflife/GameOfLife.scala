@@ -27,15 +27,10 @@ class GameOfLife:
 private object GameOfLife:
   private def neighbourhoodOf(cell: (Int, Int)) =
     val (row, col) = cell
-
-    def rowAbove = row - 1
-
-    def rowBelow = row + 1
-
-    def colLeft = col - 1
-
-    def colRight = col + 1
-
+    val rowAbove = row - 1
+    val rowBelow = row + 1
+    val colLeft = col - 1
+    val colRight = col + 1
     Seq(
       (rowAbove, colLeft),
       (rowAbove, col),
