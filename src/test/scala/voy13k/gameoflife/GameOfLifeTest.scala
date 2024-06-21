@@ -186,7 +186,7 @@ class GameOfLifeTest extends AnyFlatSpec with Matchers with TableDrivenPropertyC
     val diehardSeed = Seq(
       (1, 7),
       (2, 1), (2, 2),
-      (3, 2), (3, 6), (3, 7), (3, 9),
+      (3, 2), (3, 6), (3, 7), (3, 8),
     )
     _givenNewGame
       ._with.liveCells(diehardSeed: _*)
