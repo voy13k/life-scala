@@ -1,4 +1,4 @@
-import voy13k.gameoflife.GameOfLife
+package voy13k.gameoflife
 
 @main def app(args: String*): Unit =
   val jsonString = if args.isEmpty then "[]" else args.mkString(" ")

@@ -1,3 +1,5 @@
+package voy13k.gameoflife
+
 import org.scalatest.Inspectors.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.*
