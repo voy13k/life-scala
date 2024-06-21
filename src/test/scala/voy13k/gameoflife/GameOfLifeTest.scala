@@ -28,6 +28,20 @@ class GameOfLifeTest extends AnyFlatSpec with Matchers with TableDrivenPropertyC
       ._then.onlyLiveCellsShouldBe((1, 4), (3, 5), (1, 3))
   }
 
+  "liveCellsJson" should "return valid json" in {
+    val testJson = "[[1,3],[4,6],[-1,2]]"
+    val fixture = _givenNewGame
+      ._with.liveCells((1, 3), (4, 6), (-1, 2))
+    fixture.game.liveCellsJson.replaceAll("\\s", "") should (
+      equal("[[1,3],[4,6],[-1,2]]")
+        or equal("[[1,3],[-1,2],[4,6]]")
+        or equal("[[4,6],[1,3],[-1,2]]")
+        or equal("[[4,6],[-1,2],[1,3]]")
+        or equal("[[-1,2],[1,3],[4,6]]")
+        or equal("[[-1,2],[4,6],[1,3]]")
+      )
+  }
+
   "Repeated seed" should "be alive" in {
     _givenNewGame
       ._when.cellsSpawned(

@@ -9,11 +9,13 @@ class GameOfLife:
 
   def liveCells: Set[(Int, Int)] = cells
 
+  def liveCellsJson: String = GameOfLife.toJson(cells)
+
   def spawn(seed: Iterable[(Int, Int)]): Unit =
     cells = cells ++ seed
 
   def spawn(jsonSeed: String): Unit =
-    spawn(GameOfLife.parse(jsonSeed))
+    cells = cells ++ GameOfLife.parse(jsonSeed)
 
   def kill(seed: Iterable[(Int, Int)]): Unit =
     cells = cells -- seed
@@ -72,3 +74,5 @@ private object GameOfLife:
       case e: AbortException => throw IllegalArgumentException("JSON in the form of [[x1,y1],[x2,y2], ...] expected", e)
   }
 
+  private def toJson(cells: Iterable[(Int, Int)]): String =
+    "[" + cells.map(c => s"[${c._1}, ${c._2}]").mkString(", ") + "]"
