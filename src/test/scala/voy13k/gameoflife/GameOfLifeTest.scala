@@ -1,11 +1,10 @@
 package voy13k.gameoflife
 
-import org.scalatest.GivenWhenThen
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.*
 import org.scalatest.prop.TableDrivenPropertyChecks
 
-class GameOfLifeTest extends AnyFlatSpec with Matchers with TableDrivenPropertyChecks with GivenWhenThen {
+class GameOfLifeTest extends AnyFlatSpec with Matchers with TableDrivenPropertyChecks {
 
   "A new game" should "be blank" in {
     _givenNewGame._then.allCellsShouldBeDead
@@ -53,11 +52,10 @@ class GameOfLifeTest extends AnyFlatSpec with Matchers with TableDrivenPropertyC
       ._then.onlyLiveCellsShouldBe((1, 4), (1, 3))
   }
 
-  "An invalid json jsonSeed" should "cause sensible exception" in {
+  "An invalid json seed" should "cause sensible exception" in {
     an[IllegalArgumentException] should be thrownBy {
       _givenNewGame._when.cellsSpawned("[[1]]")
     }
-    Then("Exception should raised")
   }
 
   "Seeding" should "be cumulative" in {
@@ -223,7 +221,6 @@ class GameOfLifeTest extends AnyFlatSpec with Matchers with TableDrivenPropertyC
   }
 
   private def _givenNewGame: Fixture = {
-    Given("a new game")
     Fixture()
   }
 
@@ -241,23 +238,19 @@ class GameOfLifeTest extends AnyFlatSpec with Matchers with TableDrivenPropertyC
     def _then: Thens = Thens(this)
 
     def liveCells(cells: (Int, Int)*): Fixture =
-      Given("live cells")
       game.spawn(cells)
       this
 
     def deadCells(cells: (Int, Int)*): Fixture =
-      Given("dead cells")
       game.kill(cells)
       this
 
     def liveCellAndItsNeighbours(cell: (Int, Int), neighbours: Seq[(Int, Int)]): Fixture =
-      Given(s"live cell and its ${neighbours.size} neighbours")
       game.spawn(Seq(cell))
       game.spawn(neighbours)
       this
 
     def deadCellAndItsNeighbours(cell: (Int, Int), neighbours: Seq[(Int, Int)]): Fixture =
-      Given(s"dead cell and its ${neighbours.size} neighbours")
       game.kill(Seq(cell))
       game.spawn(neighbours)
       this
@@ -266,22 +259,18 @@ class GameOfLifeTest extends AnyFlatSpec with Matchers with TableDrivenPropertyC
     def _then: Thens = Thens(fixture)
 
     def cellsSpawned(tuples: (Int, Int)*): Whens =
-      When("cells spawned")
       fixture.game.spawn(tuples)
       this
 
     def cellsKilled(tuples: (Int, Int)*): Whens =
-      When("cells killed")
       fixture.game.kill(tuples)
       this
 
     def cellsSpawned(json: String): Whens =
-      When("cells spawned")
       fixture.game.spawn(json)
       this
 
     def evolved(): Whens =
-      When("life evolves")
       fixture.game.evolve()
       this
 
@@ -291,24 +280,20 @@ class GameOfLifeTest extends AnyFlatSpec with Matchers with TableDrivenPropertyC
     def _thenWhen: Whens = fixture._when
 
     def onlyLiveCellsShouldBe(expectedLiveCells: (Int, Int)*): Thens =
-      Then("only the specified cells should be alive")
       fixture.game.liveCells shouldBe expectedLiveCells.toSet
       this
 
     def allCellsShouldBeDead: Thens =
-      Then("all cells should be dead")
       fixture.game.liveCells shouldBe empty
       this
 
     def shouldBeDead(cells: (Int, Int)*): Thens =
-      Then("the specified cells should be dead")
       cells.foreach(c =>
         fixture.game.liveCells should not contain c
       )
       this
 
     def shouldBeAlive(cells: (Int, Int)*): Thens =
-      Then("the specified cells should be alive")
       cells.foreach(c =>
         fixture.game.liveCells should contain(c)
       )
@@ -319,10 +304,8 @@ class GameOfLifeTest extends AnyFlatSpec with Matchers with TableDrivenPropertyC
       (1 until period).foreach { i =>
         fixture._when.evolved()
 
-        Then(s"after evolution $i there should still be life")
         fixture.game.liveCells should not be empty
 
-        Then("live cells should not match any prior state")
         fixture.evolutionTrace should not contain fixture.game.liveCells
 
         // add to trace for next round
