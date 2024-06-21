@@ -186,7 +186,7 @@ class GameOfLifeTest extends AnyFlatSpec with Matchers with TableDrivenPropertyC
     val diehardSeed = Seq(
       (1, 7),
       (2, 1), (2, 2),
-      (3, 2), (3, 6), (3, 7), (3, 8),
+      (3, 2), (3, 6), (3, 7), (3, 9),
     )
     _givenNewGame
       ._with.liveCells(diehardSeed: _*)
@@ -272,6 +272,7 @@ class GameOfLifeTest extends AnyFlatSpec with Matchers with TableDrivenPropertyC
 
     def evolved(): Whens =
       fixture.game.evolve()
+      fixture.evolutionTrace = fixture.game.liveCells +: fixture.evolutionTrace
       this
 
   private class Thens(val fixture: Fixture):
@@ -299,17 +300,21 @@ class GameOfLifeTest extends AnyFlatSpec with Matchers with TableDrivenPropertyC
       )
       this
 
+    def shouldBeAlive: Thens =
+      fixture.game.liveCells should not be empty
+      this
+
+    def shouldBeUnique: Thens =
+      fixture.evolutionTrace.tail should not contain fixture.game.liveCells
+      this
+
     def evolutionShouldNotBePeriodicAtLeastUntil(period: Int): Thens = {
       fixture.evolutionTrace = List(fixture.game.liveCells)
       (1 until period).foreach { i =>
         fixture._when.evolved()
-
-        fixture.game.liveCells should not be empty
-
-        fixture.evolutionTrace should not contain fixture.game.liveCells
-
-        // add to trace for next round
-        fixture.evolutionTrace = fixture.game.liveCells +: fixture.evolutionTrace
+          ._then
+          .shouldBeAlive
+          .shouldBeUnique
       }
       this
     }
