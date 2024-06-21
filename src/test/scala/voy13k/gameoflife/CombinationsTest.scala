@@ -2,12 +2,12 @@ package voy13k.gameoflife
 
 import org.scalatest.flatspec.AnyFlatSpecLike
 import org.scalatest.matchers.should.*
+import voy13k.gameoflife.Combinations.allNCombinations
 
 class CombinationsTest extends AnyFlatSpecLike with Matchers {
 
   "1 element combinations" must "match" in {
-    val combinations = Combinations.allNCombinations(1, Set("A", "B", "C", "D", "E"))
-    combinations shouldBe Set(
+    allNCombinations(1, Set("A", "B", "C", "D", "E")) shouldBe Set(
       Set("A"),
       Set("B"),
       Set("B"),
@@ -18,8 +18,7 @@ class CombinationsTest extends AnyFlatSpecLike with Matchers {
   }
 
   "2 element combinations" must "match" in {
-    val combinations = Combinations.allNCombinations(2, Set("A", "B", "C", "D", "E"))
-    combinations shouldBe Set(
+    allNCombinations(2, Set("A", "B", "C", "D", "E")) shouldBe Set(
       Set("A", "B"),
       Set("A", "C"),
       Set("A", "D"),
@@ -34,8 +33,7 @@ class CombinationsTest extends AnyFlatSpecLike with Matchers {
   }
 
   "3 element combinations" must "match" in {
-    val combinations = Combinations.allNCombinations(3, Set("A", "B", "C", "D", "E"))
-    combinations shouldBe Set(
+    allNCombinations(3, Set("A", "B", "C", "D", "E")) shouldBe Set(
       Set("A", "B", "C"),
       Set("A", "B", "D"),
       Set("A", "B", "E"),
@@ -50,8 +48,7 @@ class CombinationsTest extends AnyFlatSpecLike with Matchers {
   }
 
   "4 element combinations" must "match" in {
-    val combinations = Combinations.allNCombinations(4, Set("A", "B", "C", "D", "E"))
-    combinations shouldBe Set(
+    allNCombinations(4, Set("A", "B", "C", "D", "E")) shouldBe Set(
       Set("A", "B", "C", "D"),
       Set("A", "B", "C", "E"),
       Set("A", "B", "D", "E"),
@@ -61,8 +58,7 @@ class CombinationsTest extends AnyFlatSpecLike with Matchers {
   }
 
   "5 element combinations" must "match" in {
-    val combinations = Combinations.allNCombinations(5, Set("A", "B", "C", "D", "E"))
-    combinations shouldBe Set(
+    allNCombinations(5, Set("A", "B", "C", "D", "E")) shouldBe Set(
       Set("A", "B", "C", "D", "E"),
     )
   }
